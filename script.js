@@ -1,3 +1,25 @@
+//Variable declaration
+var score = 0;
+var timer = 0;
+
+//Query Selectors
+var startBtn = document.querySelector("#start");
+var highscoreBtn = document.querySelector("#highscore");
+var aBtn = document.querySelector("#optionA");
+var bBtn = document.querySelector("#optionB");
+var cBtn = document.querySelector("#optionC");
+var dBtn = document.querySelector("#optionD");
+
+//DEBUG
+console.log(startBtn);
+console.log(highscoreBtn);
+console.log(aBtn);
+console.log(bBtn);
+console.log(cBtn);
+console.log(dBtn);
+
+//startBtn.addEventListener("click", startQuiz);
+
 // PSEUDO CODE
 // I need to store a set of questions in an object or array
 // when the start button is clicked 
