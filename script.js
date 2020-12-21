@@ -1,25 +1,119 @@
 //Variable declaration
 var score = 0;
-var timer = 0;
+var timer;
+var isPlaying = false;
+var currentQuestion = 0;
 
 //Query Selectors
 var startBtn = document.querySelector("#start");
 var highscoreBtn = document.querySelector("#highscore");
+var timerEl = document.querySelector("#timer")
+var questionEl = document.querySelector("#question");
 var aBtn = document.querySelector("#optionA");
 var bBtn = document.querySelector("#optionB");
 var cBtn = document.querySelector("#optionC");
 var dBtn = document.querySelector("#optionD");
+var answerEl = document.querySelector("#answer");
+var buttonEl = document.querySelector("button");
 
-//DEBUG
-console.log(startBtn);
-console.log(highscoreBtn);
-console.log(aBtn);
-console.log(bBtn);
-console.log(cBtn);
-console.log(dBtn);
+// var quizObject = {
+//   // would an array of objects be better? 
+//   questionOne: ["Is coding fun?", "yes", "no", "maybe", "idk", "yes"],
+//   questionTwo: ["Question Two", "option 1", "option 2", "option 3", "option 4", "option 2"],
+//   questionThree: ["Question Three", "option 1", "option 2", "option 3", "option 4", "option 3"],
+//   questionFour: ["Question Four", "option 1", "option 2", "option 3", "option 4", "option 4"],
+//   questionFive: ["Question Five", "option 1", "option 2", "option 3", "option 4", "option 1"],
+// }
 
-//startBtn.addEventListener("click", startQuiz);
+var quizArray = [
+  { question: "What is Mario's last name?",
+    correctAnwer: "Mario",
+    answers: {
+      optionA: "Mario", //Correct
+      optionB: "Bros",
+      optionC: "Miyamoto",
+      optionD: "Smith"
+    }
+  },
+  { question: "Who is the main protagonist of the Halo franchise?",
+    correctAnwer: "Master Chief",
+    answers: {
+      optionA: "Sergeant Johnson",
+      optionB: "Papa Smurf",
+      optionC: "Master Chief", //Correct
+      optionD: "Gordon Freeman"
+    },
+  },
+  {
+    question: "What inspired gamemaker Satoshi Tajiri to create Pokémon?",
+    correctAnwer: "Butterflies",
+    answers: {
+      optionA: "A dream",
+      optionB: "Butterflies", //Correct
+      optionC: "An old TV show",
+      optionD: "His mom"
+    },
+  },
+  {
+    question: "What was Sonic the hedgehog's original name?",
+    correctAnwer: "Mr Needlemouse",
+    answers: {
+      optionA: "Fast Blue Hedgehog",
+      optionB: "Colin the Hedgehog",
+      optionC: "Mr Needlemouse", //Correct
+      optionD: "Steven"
+    }
+  },
+  {
+    question: "What is the name of Ratchet's killer robot friend?",
+    correctAnwer: "Clank",
+    answers: {
+      optionA: "Clank", //Correct
+      optionB: "Clunk",
+      optionC: "Bonk",
+      optionD: "Bungo"
+    }
+  }
+]
 
+//Load questions and answers into document
+function loadNextQuestion() {
+  questionEl.textContent = quizArray[currentQuestion].question;
+  aBtn.textContent = quizArray[currentQuestion].answers.optionA;
+  bBtn.textContent = quizArray[currentQuestion].answers.optionB;
+  cBtn.textContent = quizArray[currentQuestion].answers.optionC;
+  dBtn.textContent = quizArray[currentQuestion].answers.optionD;
+}
+
+
+function startQuiz() {
+  isPlaying = true;
+    timer = 75;
+}
+
+function setTime() {
+  var timerInterval = setInterval(function() {
+    secondsLeft--;
+    timeEl.textContent = "Time: " + secondsLeft;
+
+    if(secondsLeft === 0) {
+      clearInterval(timerInterval);
+      sendMessage();
+    }
+
+  }, 1000);
+}
+
+function gameOver() {
+  var imgEl = document.createElement("img");
+
+  imgEl.setAttribute("src", "images/image_1.jpg");
+  mainEl.appendChild(imgEl);
+
+}
+
+startBtn.addEventListener("click", startQuiz);
+aBtn.addEventListener("click", compareQuestion
 // PSEUDO CODE
 // I need to store a set of questions in an object or array
 // when the start button is clicked 
