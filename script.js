@@ -65,19 +65,19 @@ var quizArray = [
     }
   },
   {
-    question: "What is the name of Ratchet's killer robot friend?",
-    correctAnwer: "Clank",
+    question: "What was the first commercially successful video game?",
+    correctAnwer: "Pong",
     answers: {
-      optionA: "Clank", //Correct
-      optionB: "Clunk",
-      optionC: "Bonk",
-      optionD: "Bungo"
+      optionA: "Pong", //Correct
+      optionB: "Donkey Kong Country",
+      optionC: "Super Mario Bros",
+      optionD: "Shaq Fu"
     }
   }
 ]
 
 //Load questions and answers into document
-function loadNextQuestion() {
+function loadNextQuestion(question) {
   questionEl.textContent = quizArray[currentQuestion].question;
   aBtn.textContent = quizArray[currentQuestion].answers.optionA;
   bBtn.textContent = quizArray[currentQuestion].answers.optionB;
@@ -88,32 +88,38 @@ function loadNextQuestion() {
 
 function startQuiz() {
   isPlaying = true;
-    timer = 75;
+  timer = 75;
+  console.log("Started game");
+  //startBtn.classList.add('hide');
+  setTime();
 }
 
 function setTime() {
   var timerInterval = setInterval(function() {
-    secondsLeft--;
-    timeEl.textContent = "Time: " + secondsLeft;
 
-    if(secondsLeft === 0) {
+    timer--;
+    //timerEl.textContent = timer;
+    timerEl.textContent = "Time: " + timer;
+
+    if(timer === 0 || currentQuestion === 4) {
       clearInterval(timerInterval);
-      sendMessage();
+      gameOver();
     }
-
   }, 1000);
 }
 
 function gameOver() {
-  var imgEl = document.createElement("img");
-
-  imgEl.setAttribute("src", "images/image_1.jpg");
-  mainEl.appendChild(imgEl);
 
 }
 
+
+// aBtn.addEventListener("click", compareQuestion);
+// bBtn.addEventListener("click", compareQuestion);
+// cBtn.addEventListener("click", compareQuestion);
+// dBtn.addEventListener("click", compareQuestion);
+// highscoreBtn.addEventListener("click", viewHighscores);
 startBtn.addEventListener("click", startQuiz);
-aBtn.addEventListener("click", compareQuestion
+
 // PSEUDO CODE
 // I need to store a set of questions in an object or array
 // when the start button is clicked 
