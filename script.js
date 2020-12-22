@@ -13,21 +13,16 @@ var aBtn = document.querySelector("#optionA");
 var bBtn = document.querySelector("#optionB");
 var cBtn = document.querySelector("#optionC");
 var dBtn = document.querySelector("#optionD");
-var answerEl = document.querySelector("#answer");
+var correctEl = document.querySelector("#correct");
+var incorrectEl = document.querySelector("#incorrect");
 var buttonEl = document.querySelector("button");
+var questionCardEl = document.querySelector("#questionCard");
+var promptEl = document.querySelector("#prompt");
 
-// var quizObject = {
-//   // would an array of objects be better? 
-//   questionOne: ["Is coding fun?", "yes", "no", "maybe", "idk", "yes"],
-//   questionTwo: ["Question Two", "option 1", "option 2", "option 3", "option 4", "option 2"],
-//   questionThree: ["Question Three", "option 1", "option 2", "option 3", "option 4", "option 3"],
-//   questionFour: ["Question Four", "option 1", "option 2", "option 3", "option 4", "option 4"],
-//   questionFive: ["Question Five", "option 1", "option 2", "option 3", "option 4", "option 1"],
-// }
-
+//Array of quiz questions and answers
 var quizArray = [
   { question: "What is Mario's last name?",
-    correctAnwer: "Mario",
+    correctAnswer: "optionA",
     answers: {
       optionA: "Mario", //Correct
       optionB: "Bros",
@@ -36,7 +31,7 @@ var quizArray = [
     }
   },
   { question: "Who is the main protagonist of the Halo franchise?",
-    correctAnwer: "Master Chief",
+    correctAnswer: "optionC",
     answers: {
       optionA: "Sergeant Johnson",
       optionB: "Papa Smurf",
@@ -46,7 +41,7 @@ var quizArray = [
   },
   {
     question: "What inspired gamemaker Satoshi Tajiri to create Pokémon?",
-    correctAnwer: "Butterflies",
+    correctAnswer: "optionB",
     answers: {
       optionA: "A dream",
       optionB: "Butterflies", //Correct
@@ -56,7 +51,7 @@ var quizArray = [
   },
   {
     question: "What was Sonic the hedgehog's original name?",
-    correctAnwer: "Mr Needlemouse",
+    correctAnswer: "optionC",
     answers: {
       optionA: "Fast Blue Hedgehog",
       optionB: "Colin the Hedgehog",
@@ -66,7 +61,7 @@ var quizArray = [
   },
   {
     question: "What was the first commercially successful video game?",
-    correctAnwer: "Pong",
+    correctAnswer: "optionA",
     answers: {
       optionA: "Pong", //Correct
       optionB: "Donkey Kong Country",
@@ -78,45 +73,92 @@ var quizArray = [
 
 //Load questions and answers into document
 function loadNextQuestion(question) {
-  questionEl.textContent = quizArray[currentQuestion].question;
-  aBtn.textContent = quizArray[currentQuestion].answers.optionA;
-  bBtn.textContent = quizArray[currentQuestion].answers.optionB;
-  cBtn.textContent = quizArray[currentQuestion].answers.optionC;
-  dBtn.textContent = quizArray[currentQuestion].answers.optionD;
+  questionEl.textContent = quizArray[question].question;
+  aBtn.textContent = quizArray[question].answers.optionA;
+  bBtn.textContent = quizArray[question].answers.optionB;
+  cBtn.textContent = quizArray[question].answers.optionC;
+  dBtn.textContent = quizArray[question].answers.optionD;
+  incorrectEl.classList.add('hide');
+  correctEl.classList.add('hide');
 }
+
 
 
 function startQuiz() {
   isPlaying = true;
-  timer = 75;
-  console.log("Started game");
-  //startBtn.classList.add('hide');
+  timer = 100000;
+  //setup quiz layout
+  promptEl.classList.add('hide');
+  startBtn.classList.add('hide');
+  questionCardEl.classList.remove('hide');
+
+  loadNextQuestion(currentQuestion)
   setTime();
 }
 
 function setTime() {
   var timerInterval = setInterval(function() {
-
     timer--;
-    //timerEl.textContent = timer;
     timerEl.textContent = "Time: " + timer;
 
-    if(timer === 0 || currentQuestion === 4) {
+    console.log("Current Question " + currentQuestion);
+      console.log("Quiz lenght: " + quizArray.length);
+
+    if(timer <= 0 || currentQuestion === quizArray.length) {
       clearInterval(timerInterval);
+      
       gameOver();
-    }
+    } else {
+      loadNextQuestion(currentQuestion)
+    };
   }, 1000);
 }
 
-function gameOver() {
+
+function rightAnswer(option) {
+  console.log("You're right!");
+  correctEl.classList.remove('hide');
+  currentQuestion++;
 
 }
 
+function wrongAnswer(option) {
+  timer-=10;
+  console.log("Option: " + option);
+  incorrectEl.classList.remove('hide');
+  var temp = document.querySelector(option.target.id);
+  console.log("temp: " + temp);
+  currentQuestion++;
 
-// aBtn.addEventListener("click", compareQuestion);
-// bBtn.addEventListener("click", compareQuestion);
-// cBtn.addEventListener("click", compareQuestion);
-// dBtn.addEventListener("click", compareQuestion);
+}
+console.log("A button: " + aBtn);
+
+
+
+//Shows game over screen and prompts for HS initials
+function gameOver() {
+  questionCardEl.classList.add('hide');
+  //show game over input
+}
+
+function compareQuestion(event) {
+  event.preventDefault();
+  var optionSelected = event.target.id;
+  console.log("Option selected: " + optionSelected);
+  console.log("quizArray " + quizArray[currentQuestion].correctAnswer)
+  if(optionSelected === quizArray[currentQuestion].correctAnswer) {
+    //do correct asnwer stuff
+    rightAnswer(event);
+  } else {
+    //do wrong asnwer stuff
+    wrongAnswer(event);
+  }
+}
+
+aBtn.addEventListener("click", compareQuestion);
+bBtn.addEventListener("click", compareQuestion);
+cBtn.addEventListener("click", compareQuestion);
+dBtn.addEventListener("click", compareQuestion);
 // highscoreBtn.addEventListener("click", viewHighscores);
 startBtn.addEventListener("click", startQuiz);
 

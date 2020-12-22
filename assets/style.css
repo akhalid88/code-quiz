@@ -18,3 +18,7 @@ nav {
   align-items: center;
   display: block;
 }
+
+.hide {
+  display: none;
+}
