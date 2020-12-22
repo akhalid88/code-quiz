@@ -4,6 +4,7 @@ var timer;
 var isPlaying = false;
 var currentQuestion = 0;
 
+
 //Query Selectors
 var startBtn = document.querySelector("#start");
 var highscoreBtn = document.querySelector("#highscore");
@@ -15,9 +16,13 @@ var cBtn = document.querySelector("#optionC");
 var dBtn = document.querySelector("#optionD");
 var correctEl = document.querySelector("#correct");
 var incorrectEl = document.querySelector("#incorrect");
-var buttonEl = document.querySelector("button");
+var buttonEl = document.querySelector("#button");
 var questionCardEl = document.querySelector("#questionCard");
 var promptEl = document.querySelector("#prompt");
+var hsPromptEl = document.querySelector("#hsprompt");
+var formEl = document.querySelector("#form");
+var inputEl = document.querySelector("#input");
+var submitEL = document.querySelector("#button-addon2");
 
 //Array of quiz questions and answers
 var quizArray = [
@@ -71,6 +76,20 @@ var quizArray = [
   }
 ]
 
+//hide general elements that will be overwritten
+function hideElements() {
+  questionCardEl.classList.add('hide');
+  startBtn.classList.add('hide');
+  correctEl.classList.add('hide');
+  incorrectEl.classList.add('hide');
+  questionCardEl.classList.add('hide');
+  promptEl.classList.add('hide');
+  hsPromptEl.classList.add('hide');
+  formEl.classList.add('hide');
+  inputEl.classList.add('hide');
+  submitEL.classList.add('hide');
+}
+
 //Load questions and answers into document
 function loadNextQuestion(question) {
   questionEl.textContent = quizArray[question].question;
@@ -82,31 +101,30 @@ function loadNextQuestion(question) {
   correctEl.classList.add('hide');
 }
 
-
-
+//starts the quiz
 function startQuiz() {
   isPlaying = true;
-  timer = 100000;
+  timer = 10;
   //setup quiz layout
-  promptEl.classList.add('hide');
-  startBtn.classList.add('hide');
+  hideElements();
   questionCardEl.classList.remove('hide');
 
-  loadNextQuestion(currentQuestion)
+  //start timer
   setTime();
+
+  //Load first question
+  loadNextQuestion(currentQuestion);  
 }
 
 function setTime() {
   var timerInterval = setInterval(function() {
+    //timer update
     timer--;
     timerEl.textContent = "Time: " + timer;
 
-    console.log("Current Question " + currentQuestion);
-      console.log("Quiz lenght: " + quizArray.length);
-
+    //check for game end
     if(timer <= 0 || currentQuestion === quizArray.length) {
       clearInterval(timerInterval);
-      
       gameOver();
     } else {
       loadNextQuestion(currentQuestion)
@@ -114,44 +132,47 @@ function setTime() {
   }, 1000);
 }
 
-
+//shows user if answer is corrent and increments counter
 function rightAnswer(option) {
-  console.log("You're right!");
   correctEl.classList.remove('hide');
   currentQuestion++;
-
 }
 
+// shows user if answer is wrong and increments counter
 function wrongAnswer(option) {
   timer-=10;
-  console.log("Option: " + option);
   incorrectEl.classList.remove('hide');
-  var temp = document.querySelector(option.target.id);
-  console.log("temp: " + temp);
   currentQuestion++;
-
 }
-console.log("A button: " + aBtn);
-
-
 
 //Shows game over screen and prompts for HS initials
 function gameOver() {
-  questionCardEl.classList.add('hide');
+  score = timer;
+  hideElements();
   //show game over input
+  hsPromptEl.classList.remove('hide');
+  formEl.classList.remove('hide');
+  inputEl.classList.remove('hide');
+  submitEL.classList.remove('hide');
 }
 
 function compareQuestion(event) {
   event.preventDefault();
   var optionSelected = event.target.id;
-  console.log("Option selected: " + optionSelected);
-  console.log("quizArray " + quizArray[currentQuestion].correctAnswer)
+  //compare selected answer with the answer stored in the array
   if(optionSelected === quizArray[currentQuestion].correctAnswer) {
-    //do correct asnwer stuff
+    //do correct answer stuff
     rightAnswer(event);
   } else {
-    //do wrong asnwer stuff
+    //do wrong answer stuff
     wrongAnswer(event);
+  }
+}
+
+function viewHighscores(){
+  hideElements();
+  if(isPlaying) {
+    timer = 0;
   }
 }
 
@@ -159,7 +180,7 @@ aBtn.addEventListener("click", compareQuestion);
 bBtn.addEventListener("click", compareQuestion);
 cBtn.addEventListener("click", compareQuestion);
 dBtn.addEventListener("click", compareQuestion);
-// highscoreBtn.addEventListener("click", viewHighscores);
+highscoreBtn.addEventListener("click", viewHighscores);
 startBtn.addEventListener("click", startQuiz);
 
 // PSEUDO CODE
