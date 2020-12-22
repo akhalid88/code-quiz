@@ -6,14 +6,18 @@ var currentQuestion = 0;
 
 
 //Query Selectors
+//Buttons
 var startBtn = document.querySelector("#start");
 var highscoreBtn = document.querySelector("#highscore");
-var timerEl = document.querySelector("#timer")
-var questionEl = document.querySelector("#question");
+var submitBtn = document.querySelector("#button-addon2");
 var aBtn = document.querySelector("#optionA");
 var bBtn = document.querySelector("#optionB");
 var cBtn = document.querySelector("#optionC");
 var dBtn = document.querySelector("#optionD");
+
+//Elements
+var timerEl = document.querySelector("#timer");
+var questionEl = document.querySelector("#question");
 var correctEl = document.querySelector("#correct");
 var incorrectEl = document.querySelector("#incorrect");
 var buttonEl = document.querySelector("#button");
@@ -22,7 +26,8 @@ var promptEl = document.querySelector("#prompt");
 var hsPromptEl = document.querySelector("#hsprompt");
 var formEl = document.querySelector("#form");
 var inputEl = document.querySelector("#input");
-var submitEL = document.querySelector("#button-addon2");
+
+
 
 //Array of quiz questions and answers
 var quizArray = [
@@ -87,7 +92,7 @@ function hideElements() {
   hsPromptEl.classList.add('hide');
   formEl.classList.add('hide');
   inputEl.classList.add('hide');
-  submitEL.classList.add('hide');
+  submitBtn.classList.add('hide');
 }
 
 //Load questions and answers into document
@@ -104,7 +109,7 @@ function loadNextQuestion(question) {
 //starts the quiz
 function startQuiz() {
   isPlaying = true;
-  timer = 75;
+  timer = 11;
   //setup quiz layout
   hideElements();
   questionCardEl.classList.remove('hide');
@@ -153,7 +158,8 @@ function gameOver() {
   hsPromptEl.classList.remove('hide');
   formEl.classList.remove('hide');
   inputEl.classList.remove('hide');
-  submitEL.classList.remove('hide');
+  submitBtn.classList.remove('hide');
+  updateHSPrompt();
 }
 
 function compareQuestion(event) {
@@ -176,10 +182,32 @@ function viewHighscores(){
   }
 }
 
+function updateHSPrompt() {
+  hsPromptEl.textContent = "Good job! You earned a score of " + score + ". Enter your initials to save your score to the leaderboards.";
+}
+
+function submitScores(event){
+  var temp = inputEl.value.trim();
+  var user = {
+    username: formEl.nodeValue,
+    useras: temp,
+    userscore: score
+  };
+
+  
+  console.log(user.username);
+  console.log(user.useras);
+  console.log(user.userscore);
+  console.log(user)
+}
+
+
+
 aBtn.addEventListener("click", compareQuestion);
 bBtn.addEventListener("click", compareQuestion);
 cBtn.addEventListener("click", compareQuestion);
 dBtn.addEventListener("click", compareQuestion);
+submitBtn.addEventListener("click", submitScores);
 highscoreBtn.addEventListener("click", viewHighscores);
 startBtn.addEventListener("click", startQuiz);
 
@@ -245,22 +273,3 @@ startBtn.addEventListener("click", startQuiz);
   //showAnswer(); when user clicks on choice, update ui to show whether it was right or wrong
   //gameOver(); when game is over load gameOver screen
   //saveScore();
-
-
-// User Story
-// AS A coding bootcamp student
-// I WANT to take a timed quiz on JavaScript fundamentals that stores high scores
-// SO THAT I can gauge my progress compared to my peers
-
-// Acceptance Criteria
-// GIVEN I am taking a code quiz
-// WHEN I click the start button
-// THEN a timer starts and I am presented with a question
-// WHEN I answer a question
-// THEN I am presented with another question
-// WHEN I answer a question incorrectly
-// THEN time is subtracted from the clock
-// WHEN all questions are answered or the timer reaches 0
-// THEN the game is over
-// WHEN the game is over
-// THEN I can save my initials and score
