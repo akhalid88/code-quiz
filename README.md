@@ -17,15 +17,15 @@ fun text
 
 -----------------------
 ## Description
-
+A timed multiple choice quiz. This fun application runs in the browers and features dynamically updated HTML and CSS powered by Javascript. It has a responsive UI, adapting to multiple screen sizes and utilizes the client side storage to keep a record of scores
 
 -----------------------
 ## Deployed Link
-
+https://akhalid88.github.io/quiznak-game/
 
 -----------------------
 ## Walkthrough
-
+![Main](assets/readme/main.png)
 
 -----------------------
 ## Code Snippet
@@ -33,7 +33,7 @@ fun text
 
 -----------------------
 ## Prerequisites
-A computer with an active internet connection
+A computer with an active internet connection and a web browser
 
 -----------------------
 ## Installing instructions
@@ -42,6 +42,7 @@ None
 -----------------------
 ## Built with
 - Javascript
+- Bootstrap
 - HTML
 - CSS
 - Git

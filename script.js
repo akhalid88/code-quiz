@@ -104,7 +104,7 @@ function loadNextQuestion(question) {
 //starts the quiz
 function startQuiz() {
   isPlaying = true;
-  timer = 10;
+  timer = 75;
   //setup quiz layout
   hideElements();
   questionCardEl.classList.remove('hide');
