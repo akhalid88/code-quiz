@@ -26,7 +26,7 @@ var promptEl = document.querySelector("#prompt");
 var hsPromptEl = document.querySelector("#hsprompt");
 var formEl = document.querySelector("#form");
 var inputEl = document.querySelector("#input");
-
+var hsTableEl = document.querySelector("#hsTable");
 
 
 //Array of quiz questions and answers
@@ -83,16 +83,20 @@ var quizArray = [
 
 //hide general elements that will be overwritten
 function hideElements() {
-  questionCardEl.classList.add('hide');
+  //Start page
+  promptEl.classList.add('hide');
   startBtn.classList.add('hide');
+  //Quiz page
+  questionCardEl.classList.add('hide');
   correctEl.classList.add('hide');
   incorrectEl.classList.add('hide');
-  questionCardEl.classList.add('hide');
-  promptEl.classList.add('hide');
+  //Gameover page
   hsPromptEl.classList.add('hide');
   formEl.classList.add('hide');
   inputEl.classList.add('hide');
   submitBtn.classList.add('hide');
+  //Highscore page
+  hsTableEl.classList.add('hide');
 }
 
 //Load questions and answers into document
@@ -109,7 +113,7 @@ function loadNextQuestion(question) {
 //starts the quiz
 function startQuiz() {
   isPlaying = true;
-  timer = 11;
+  timer = 75;
   //setup quiz layout
   hideElements();
   questionCardEl.classList.remove('hide');
@@ -177,6 +181,7 @@ function compareQuestion(event) {
 
 function viewHighscores(){
   hideElements();
+  hsTableEl.classList.remove('hide');
   if(isPlaying) {
     timer = 0;
   }
@@ -189,18 +194,30 @@ function updateHSPrompt() {
 function submitScores(event){
   var temp = inputEl.value.trim();
   var user = {
-    username: formEl.nodeValue,
-    useras: temp,
+    username: temp,
     userscore: score
   };
 
-  
+  //DEBUG
+  console.log(user);
   console.log(user.username);
-  console.log(user.useras);
   console.log(user.userscore);
-  console.log(user)
+  writeToLocal(user);
+  loadHighscores();
 }
 
+function addToUserObject () {
+
+}
+
+function writeToLocal(object) {
+  localStorage.setItem("user", JSON.stringify(object));
+}
+
+function loadHighscores() {
+
+
+}
 
 
 aBtn.addEventListener("click", compareQuestion);

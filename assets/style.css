@@ -22,3 +22,7 @@ nav {
 .hide {
   display: none;
 }
+
+li > span {
+  text-align:right;
+}
