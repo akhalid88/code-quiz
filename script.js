@@ -4,7 +4,6 @@ var timer;
 var isPlaying = false;
 var currentQuestion;
 var playerArray = [];
-var players;
 
 //Query Selectors
 //Buttons
@@ -175,11 +174,10 @@ function startQuiz(event) {
   event.preventDefault();
   isPlaying = true;
   currentQuestion = 0;
-  timer = 75;
+  timer = 100;
   //setup quiz layout
   hideElements();
   showQuizPage();
-//  questionCardEl.classList.remove('hide');
 
   //start timer
   setTime();
@@ -280,6 +278,9 @@ function viewHighscores(event){
     timer = 0;
     isPlaying = false;
   }
+
+  getFromLocal();
+  loadHighscores();
 }
 
 //Reset and show highscor view; create html elements for highscores
@@ -302,19 +303,18 @@ function loadHighscores() {
     span.textContent = player.userscore;
     span.setAttribute("class", "float-end");
 
+    //append span to list and list to highscore ul
     li.appendChild(span);
     hsListEl.appendChild(li);
-    
   }
 }
 
-// function clearHighscores() {
-//   localStorage.clear();
-//   loadHighscores();
-//   console.log(hsListEl);
-//   hsListEl.innerHTML = "";
-  
-// }
+function clearHighscores() {
+  localStorage.clear();
+  loadHighscores();
+  console.log(hsListEl);
+  hsListEl.innerHTML = "";
+}
 
 //Event Listeners for all interactable elements
 aBtn.addEventListener("click", compareQuestion);
@@ -325,89 +325,4 @@ submitBtn.addEventListener("click", submitScores);
 highscoreBtn.addEventListener("click", viewHighscores);
 startBtn.addEventListener("click", startQuiz);
 backBtn.addEventListener("click", showStartPage);
-//clearBtn.addEventListener("click", clearHighscores);
-
-  //DEBUG
-  // console.log("Temp: " + temp);
-  // console.log("PlayerArray: " + playerArray);
-  // console.log("Username: " + playerArray[0].username);
-  // console.log("Userscore: " + playerArray[0].userscore);
-  // console.log("===========");
-
-
-    //DEBUG
-  // console.log("HSList: " + hsListEl);
-  // console.log("Has Child: " + hsListEl.hasChildNodes());
-  // console.log("Child 1: " + hsListEl[0]);
-  // console.log("===========");
-  // while(hsListEl.hasChildNodes()) {
-  //   var child = document.getElementById(".listitem-")
-
-
-  // }
-  // console.log("childnodes: " + hsListEl.hasChildNodes());
-  // if(hsListEl.hasChildNodes()) {
-  //   hsListEl.removeChild("li");
-  // }
-  // console.log("childnodes 2: " + hsListEl.hasChildNodes());
-
-
-  //DEBUG
-    // console.log("List: " + li);
-    // console.log("Span: " + span);
-    // console.log("Full List: " + hsListEl);
-
-
-// PSEUDO CODE
-// I need to store a set of questions in an object or array
-// when the start button is clicked 
-// pull first question from object/array
-// comapre input with database of answers
-// on correct answer
-//  go to next page
-// on incorrect answer
-//  deduct points
-//  go to next page
-// when timer reaches 0 or no more questions game over, transition to score page
-// display score and input field for initials
-// submit button to submit score to high score list
-// UI needs a View highscore option to 
-
-//var timer;
-//var quizStarted = false;
-//HTML elements to capture
-//timerEl = document.QuerySelector("#timer");
-//highscoreEl ...
-//startButtonEl ...
-//quizContainerEl/mainContentEl ...
-//initialsEl
-//submitHsEl
-
-//EventListeners
-//highscoreEl.Event Listener
-//start quiz. event listener
-//submit HS. Event listener
-//initalsEl.Event listerner
-
-//while loop for question looping
-//user click on start Quiz button
-  // event listener changes quizStarted to true
-//mainContentEl updates with questionOne
-
-//functions needed
-  //compareAnswer(); returns true or false
-  //  if selectedAnswer === correctAnswer
-  //    update display("Correct")
-  //  else
-  //    update display("Incorrect")
-  //    deductTime()
-  //      timer = timer - 10;
-  //      update timerEl
-  //  loadNextQuestion()
-
-  //loadNextQuestion(); sets HTML elements to next question
-    //addButton; add button for each choice for question
-  //deductTime(); subtracts time from timer
-  //showAnswer(); when user clicks on choice, update ui to show whether it was right or wrong
-  //gameOver(); when game is over load gameOver screen
-  //saveScore();
+clearBtn.addEventListener("click", clearHighscores);
