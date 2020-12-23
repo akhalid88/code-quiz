@@ -34,7 +34,7 @@ var hsListEl = document.querySelector("#hsList");
 
 //Array of quiz questions and answers
 var quizArray = [
-  { question: "What is Mario's last name?",
+  { question: "Question 1: What is Mario's last name?",
     correctAnswer: "optionA",
     answers: {
       optionA: "Mario", //Correct
@@ -43,7 +43,7 @@ var quizArray = [
       optionD: "Smith"
     }
   },
-  { question: "Who is the main protagonist of the Halo franchise?",
+  { question: "Question 2: Who is the main protagonist of the Halo franchise?",
     correctAnswer: "optionC",
     answers: {
       optionA: "Sergeant Johnson",
@@ -53,7 +53,7 @@ var quizArray = [
     },
   },
   {
-    question: "What inspired gamemaker Satoshi Tajiri to create Pokémon?",
+    question: "Question 3: What inspired gamemaker Satoshi Tajiri to create Pokémon?",
     correctAnswer: "optionB",
     answers: {
       optionA: "A dream",
@@ -63,7 +63,7 @@ var quizArray = [
     },
   },
   {
-    question: "What was Sonic the hedgehog's original name?",
+    question: "Question 4: What was Sonic the hedgehog's original name?",
     correctAnswer: "optionC",
     answers: {
       optionA: "Fast Blue Hedgehog",
@@ -73,13 +73,43 @@ var quizArray = [
     }
   },
   {
-    question: "What was the first commercially successful video game?",
+    question: "Question 5: What was the first commercially successful video game?",
     correctAnswer: "optionA",
     answers: {
       optionA: "Pong", //Correct
       optionB: "Donkey Kong Country",
       optionC: "Super Mario Bros",
       optionD: "Shaq Fu"
+    }
+  },
+  {
+    question: "Question 6: What is the highest-selling gaming console to date?",
+    correctAnswer: "optionC",
+    answers: {
+      optionA: "Nintendo Wii",
+      optionB: "Xbox 360",
+      optionC: "Playstation 2", //Correct
+      optionD: "Nintendo 3DS"
+    }
+  },
+  {
+    question: "Question 7: What was Nintendo's orignal product before making video games?",
+    correctAnswer: "optionA",
+    answers: {
+      optionA: "Playing cards", //Correct
+      optionB: "Tennis rackets",
+      optionC: "Toy figurines",
+      optionD: "Televisions"
+    }
+  },
+  {
+    question: "Question 8: In the original Donkey Kong, what was the name of the character that would later be known as Mario?",
+    correctAnswer: "optionD",
+    answers: {
+      optionA: "Jumps McGee",
+      optionB: "Mr. Overalls",
+      optionC: "John Smith",
+      optionD: "Jumpman" //Correct
     }
   }
 ]
@@ -117,11 +147,14 @@ function showGameOverPage() {
   formEl.classList.remove('hide');
   inputEl.classList.remove('hide');
   submitBtn.classList.remove('hide');
+  hsPromptEl.textContent = "Good job! You earned a score of " + score + ". Enter your initials to save your score to the leaderboards.";
 }
+
 function showHighscorePage() {
   hsTableEl.classList.remove('hide');
   backBtn.classList.remove('hide');
 }
+
 //Load questions and answers into document
 function loadNextQuestion(question) {
   questionEl.textContent = quizArray[question].question;
@@ -137,7 +170,7 @@ function loadNextQuestion(question) {
 function startQuiz() {
   isPlaying = true;
   currentQuestion = 0;
-  timer = 75;
+  timer = 50;
   //setup quiz layout
   hideElements();
   showQuizPage();
@@ -154,16 +187,36 @@ function setTime() {
   var timerInterval = setInterval(function() {
     //timer update
     timer--;
-    timerEl.textContent = "Time: " + timer;
 
+    //validation so timer can't be negative
+    if(timer <= 0) {
+      timer = 0;    
+    }
+    timerEl.textContent = "Time: " + timer;
+  
     //check for game end
     if(timer <= 0 || currentQuestion === quizArray.length) {
       clearInterval(timerInterval);
+      timer = 0;
       gameOver();
     } else {
       loadNextQuestion(currentQuestion)
     };
   }, 1000);
+}
+
+//compare selected answer with correct answer from quiz array
+function compareQuestion(event) {
+  event.preventDefault();
+  var optionSelected = event.target.id;
+  //compare selected answer with the answer stored in the array
+  if(optionSelected === quizArray[currentQuestion].correctAnswer) {
+    //do correct answer stuff
+    rightAnswer(event);
+  } else {
+    //do wrong answer stuff
+    wrongAnswer(event);
+  }
 }
 
 //shows user if answer is corrent and increments counter
@@ -179,46 +232,14 @@ function wrongAnswer(option) {
   currentQuestion++;
 }
 
-//Shows game over screen and prompts for HS initials
+//Shows game over view and prompts for HS initials
 function gameOver() {
   score = timer;
   hideElements();
-  //show game over input
   showGameOverPage();
-  // hsPromptEl.classList.remove('hide');
-  // formEl.classList.remove('hide');
-  // inputEl.classList.remove('hide');
-  // submitBtn.classList.remove('hide');
-  updateHSPrompt();
 }
 
-function compareQuestion(event) {
-  event.preventDefault();
-  var optionSelected = event.target.id;
-  //compare selected answer with the answer stored in the array
-  if(optionSelected === quizArray[currentQuestion].correctAnswer) {
-    //do correct answer stuff
-    rightAnswer(event);
-  } else {
-    //do wrong answer stuff
-    wrongAnswer(event);
-  }
-}
-
-function viewHighscores(){
-  hideElements();
-  showHighscorePage();
-  // hsTableEl.classList.remove('hide');
-  // backBtn.classList.remove('hide');
-  if(isPlaying) {
-    timer = 0;
-  }
-}
-
-function updateHSPrompt() {
-  hsPromptEl.textContent = "Good job! You earned a score of " + score + ". Enter your initials to save your score to the leaderboards.";
-}
-
+//grab input field data to pass to local storage
 function submitScores(event){
   var temp = inputEl.value.trim();
   playerArray.push({
@@ -232,34 +253,47 @@ function submitScores(event){
   // console.log("Username: " + playerArray[0].username);
   // console.log("Userscore: " + playerArray[0].userscore);
   // console.log("===========");
-  writeToLocal(playerArray);
+  setToLocal(playerArray);
   loadHighscores();
 }
 
-function addToUserObject () {
-
-}
-
-function writeToLocal(object) {
-  localStorage.setItem("user", JSON.stringify(object));
+//set player highscore to local storage
+function setToLocal(array) {
+  localStorage.setItem("user", JSON.stringify(array));
+  //DEBUG
   console.log("Reached Write to Local Storage POint");
 }
 
+//get player highscore from local storage for loadHighscores()
 function getFromLocal() {
   players = JSON.parse(localStorage.getItem("user"));
+  //DEBUG
   console.log("Reached get from Local storage poiint");
-  console.log(players);
+  console.log("PLayers: " + players);
   return players;
 }
 
+//reset screen and show highscore view
+function viewHighscores(){
+  hideElements();
+  showHighscorePage();
+  
+  console.log("childnodes: " + hsListEl.hasChildNodes());
+  if(hsListEl.hasChildNodes() > 0) {
+    hsListEl.removeChild("li");
+  }
+  console.log("childnodes 2: " + hsListEl.hasChildNodes());
+  if(isPlaying) {
+    timer = 0;
+    isPlaying = false;
+  }
+}
+
+//reset and show highscor view; create html elements for highscores
 function loadHighscores() {
   hideElements();
   showHighscorePage();
-  // hsTableEl.classList.remove('hide');
-  // backBtn.classList.remove('hide');
   getFromLocal();
-  //var players = JSON.parse(localStorage.getItem("user"));
-  console.log(players.username);
 
   for (var i = 0; i < players.length; i++) {
     var player = players[i];
@@ -274,7 +308,6 @@ function loadHighscores() {
     span.textContent = player.userscore;
     span.setAttribute("class", "float-end");
 
-
     li.appendChild(span);
     hsListEl.appendChild(li);
     //DEBUG
@@ -282,10 +315,9 @@ function loadHighscores() {
     console.log("Span: " + span);
     console.log("Full List: " + hsListEl);
   }
-
 }
 
-
+//Event Listeners for all interactable elements
 aBtn.addEventListener("click", compareQuestion);
 bBtn.addEventListener("click", compareQuestion);
 cBtn.addEventListener("click", compareQuestion);
@@ -309,15 +341,6 @@ backBtn.addEventListener("click", startQuiz);
 // display score and input field for initials
 // submit button to submit score to high score list
 // UI needs a View highscore option to 
-
-// var quiz = {
-//   // would an array of objects be better? 
-//   questionOne: ["is coding fun?", "yes", "no", "maybe", "idk", "yes"],
-//   questionTwo: ["Question Two", "option 1", "option 2", "option 3", "option 4", "option 2",
-//   questionThree: ["Question Three", "option 1", "option 2", "option 3", "option 4", "option 3"],
-//   questionFour: ["Question Four", "option 1", "option 2", "option 3", "option 4", "option 4"],
-//   questionFive: ["Question Five", "option 1", "option 2", "option 3", "option 4", "option 1"],
-// }
 
 //var timer;
 //var quizStarted = false;
