@@ -311,9 +311,8 @@ function loadHighscores() {
 
 function clearHighscores() {
   localStorage.clear();
-  loadHighscores();
-  console.log(hsListEl);
   hsListEl.innerHTML = "";
+  loadHighscores();
 }
 
 //Event Listeners for all interactable elements
