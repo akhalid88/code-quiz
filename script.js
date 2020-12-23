@@ -10,6 +10,7 @@ var players;
 //Buttons
 var startBtn = document.querySelector("#start");
 var backBtn = document.querySelector("#back");
+var clearBtn = document.querySelector("#clear");
 var highscoreBtn = document.querySelector("#highscore");
 var submitBtn = document.querySelector("#button-addon2");
 var aBtn = document.querySelector("#optionA");
@@ -114,7 +115,7 @@ var quizArray = [
   }
 ]
 
-//hide general elements that will be overwritten
+//Hide general elements that will be overwritten
 function hideElements() {
   //Start page
   promptEl.classList.add('hide');
@@ -131,9 +132,11 @@ function hideElements() {
   //Highscore page
   hsTableEl.classList.add('hide');
   backBtn.classList.add('hide');
+  clearBtn.classList.add('hide');
 }
 
 function showStartPage() {
+  hideElements();
   promptEl.classList.remove('hide');
   startBtn.classList.remove('hide');
 }
@@ -153,6 +156,7 @@ function showGameOverPage() {
 function showHighscorePage() {
   hsTableEl.classList.remove('hide');
   backBtn.classList.remove('hide');
+  clearBtn.classList.remove('hide');
 }
 
 //Load questions and answers into document
@@ -166,8 +170,9 @@ function loadNextQuestion(question) {
   correctEl.classList.add('hide');
 }
 
-//starts the quiz
-function startQuiz() {
+//Start the quiz
+function startQuiz(event) {
+  event.preventDefault();
   isPlaying = true;
   currentQuestion = 0;
   timer = 50;
@@ -183,6 +188,7 @@ function startQuiz() {
   loadNextQuestion(currentQuestion);  
 }
 
+//Start Timer
 function setTime() {
   var timerInterval = setInterval(function() {
     //timer update
@@ -205,7 +211,7 @@ function setTime() {
   }, 1000);
 }
 
-//compare selected answer with correct answer from quiz array
+//Compare selected answer with correct answer from quiz array
 function compareQuestion(event) {
   event.preventDefault();
   var optionSelected = event.target.id;
@@ -219,13 +225,13 @@ function compareQuestion(event) {
   }
 }
 
-//shows user if answer is corrent and increments counter
+//Shows user if answer is corrent and increments counter
 function rightAnswer(option) {
   correctEl.classList.remove('hide');
   currentQuestion++;
 }
 
-// shows user if answer is wrong and increments counter
+//Shows user if answer is wrong and increments counter
 function wrongAnswer(option) {
   timer-=10;
   incorrectEl.classList.remove('hide');
@@ -239,10 +245,12 @@ function gameOver() {
   showGameOverPage();
 }
 
-//grab input field data to pass to local storage
+//Grab input field data to pass to local storage
 function submitScores(event){
+  event.stopPropagation();
+  event.preventDefault();
   var temp = inputEl.value.trim();
-  playerArray.push({
+    playerArray.push({
     username: temp,
     userscore: score
   });
@@ -257,39 +265,50 @@ function submitScores(event){
   loadHighscores();
 }
 
-//set player highscore to local storage
+//Set player highscore to local storage
 function setToLocal(array) {
-  localStorage.setItem("user", JSON.stringify(array));
+  localStorage.setItem("players", JSON.stringify(array));
   //DEBUG
   console.log("Reached Write to Local Storage POint");
 }
 
-//get player highscore from local storage for loadHighscores()
+//Get player highscore from local storage for loadHighscores()
 function getFromLocal() {
-  players = JSON.parse(localStorage.getItem("user"));
+  players = JSON.parse(localStorage.getItem("players"));
   //DEBUG
   console.log("Reached get from Local storage poiint");
-  console.log("PLayers: " + players);
+  console.log("Players: " + players);
   return players;
 }
 
-//reset screen and show highscore view
-function viewHighscores(){
+//Reset screen and show highscore view
+function viewHighscores(event){
+  event.preventDefault();
   hideElements();
   showHighscorePage();
   
-  console.log("childnodes: " + hsListEl.hasChildNodes());
-  if(hsListEl.hasChildNodes() > 0) {
-    hsListEl.removeChild("li");
-  }
-  console.log("childnodes 2: " + hsListEl.hasChildNodes());
+  //DEBUG
+  console.log("HSList: " + hsListEl);
+  console.log("Has Child: " + hsListEl.hasChildNodes());
+  console.log("Child 1: " + hsListEl[0]);
+  console.log("===========");
+  // while(hsListEl.hasChildNodes()) {
+  //   var child = document.getElementById(".listitem-")
+
+
+  // }
+  // console.log("childnodes: " + hsListEl.hasChildNodes());
+  // if(hsListEl.hasChildNodes()) {
+  //   hsListEl.removeChild("li");
+  // }
+  // console.log("childnodes 2: " + hsListEl.hasChildNodes());
   if(isPlaying) {
     timer = 0;
     isPlaying = false;
   }
 }
 
-//reset and show highscor view; create html elements for highscores
+//Reset and show highscor view; create html elements for highscores
 function loadHighscores() {
   hideElements();
   showHighscorePage();
@@ -301,7 +320,7 @@ function loadHighscores() {
     //create list element
     var li = document.createElement("li");
     li.textContent = player.username;
-    li.setAttribute("class", "list-group-item");
+    li.setAttribute("class", "list-group-item listitem-" + i);
 
     //create child span element
     var span = document.createElement("span");
@@ -317,6 +336,9 @@ function loadHighscores() {
   }
 }
 
+function clearHighscores() {
+  localStorage.clear();
+}
 //Event Listeners for all interactable elements
 aBtn.addEventListener("click", compareQuestion);
 bBtn.addEventListener("click", compareQuestion);
@@ -325,7 +347,8 @@ dBtn.addEventListener("click", compareQuestion);
 submitBtn.addEventListener("click", submitScores);
 highscoreBtn.addEventListener("click", viewHighscores);
 startBtn.addEventListener("click", startQuiz);
-backBtn.addEventListener("click", startQuiz);
+backBtn.addEventListener("click", showStartPage);
+clearBtn.addEventListener("click", clearHighscores);
 
 // PSEUDO CODE
 // I need to store a set of questions in an object or array
