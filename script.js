@@ -2,12 +2,14 @@
 var score = 0;
 var timer;
 var isPlaying = false;
-var currentQuestion = 0;
-
+var currentQuestion;
+var playerArray = [];
+var players;
 
 //Query Selectors
 //Buttons
 var startBtn = document.querySelector("#start");
+var backBtn = document.querySelector("#back");
 var highscoreBtn = document.querySelector("#highscore");
 var submitBtn = document.querySelector("#button-addon2");
 var aBtn = document.querySelector("#optionA");
@@ -27,6 +29,7 @@ var hsPromptEl = document.querySelector("#hsprompt");
 var formEl = document.querySelector("#form");
 var inputEl = document.querySelector("#input");
 var hsTableEl = document.querySelector("#hsTable");
+var hsListEl = document.querySelector("#hsList");
 
 
 //Array of quiz questions and answers
@@ -97,8 +100,28 @@ function hideElements() {
   submitBtn.classList.add('hide');
   //Highscore page
   hsTableEl.classList.add('hide');
+  backBtn.classList.add('hide');
 }
 
+function showStartPage() {
+  promptEl.classList.remove('hide');
+  startBtn.classList.remove('hide');
+}
+
+function showQuizPage() {
+  questionCardEl.classList.remove('hide');
+}
+
+function showGameOverPage() {
+  hsPromptEl.classList.remove('hide');
+  formEl.classList.remove('hide');
+  inputEl.classList.remove('hide');
+  submitBtn.classList.remove('hide');
+}
+function showHighscorePage() {
+  hsTableEl.classList.remove('hide');
+  backBtn.classList.remove('hide');
+}
 //Load questions and answers into document
 function loadNextQuestion(question) {
   questionEl.textContent = quizArray[question].question;
@@ -113,10 +136,12 @@ function loadNextQuestion(question) {
 //starts the quiz
 function startQuiz() {
   isPlaying = true;
+  currentQuestion = 0;
   timer = 75;
   //setup quiz layout
   hideElements();
-  questionCardEl.classList.remove('hide');
+  showQuizPage();
+//  questionCardEl.classList.remove('hide');
 
   //start timer
   setTime();
@@ -159,10 +184,11 @@ function gameOver() {
   score = timer;
   hideElements();
   //show game over input
-  hsPromptEl.classList.remove('hide');
-  formEl.classList.remove('hide');
-  inputEl.classList.remove('hide');
-  submitBtn.classList.remove('hide');
+  showGameOverPage();
+  // hsPromptEl.classList.remove('hide');
+  // formEl.classList.remove('hide');
+  // inputEl.classList.remove('hide');
+  // submitBtn.classList.remove('hide');
   updateHSPrompt();
 }
 
@@ -181,7 +207,9 @@ function compareQuestion(event) {
 
 function viewHighscores(){
   hideElements();
-  hsTableEl.classList.remove('hide');
+  showHighscorePage();
+  // hsTableEl.classList.remove('hide');
+  // backBtn.classList.remove('hide');
   if(isPlaying) {
     timer = 0;
   }
@@ -193,16 +221,18 @@ function updateHSPrompt() {
 
 function submitScores(event){
   var temp = inputEl.value.trim();
-  var user = {
+  playerArray.push({
     username: temp,
     userscore: score
-  };
+  });
 
   //DEBUG
-  console.log(user);
-  console.log(user.username);
-  console.log(user.userscore);
-  writeToLocal(user);
+  // console.log("Temp: " + temp);
+  // console.log("PlayerArray: " + playerArray);
+  // console.log("Username: " + playerArray[0].username);
+  // console.log("Userscore: " + playerArray[0].userscore);
+  // console.log("===========");
+  writeToLocal(playerArray);
   loadHighscores();
 }
 
@@ -212,10 +242,46 @@ function addToUserObject () {
 
 function writeToLocal(object) {
   localStorage.setItem("user", JSON.stringify(object));
+  console.log("Reached Write to Local Storage POint");
+}
+
+function getFromLocal() {
+  players = JSON.parse(localStorage.getItem("user"));
+  console.log("Reached get from Local storage poiint");
+  console.log(players);
+  return players;
 }
 
 function loadHighscores() {
+  hideElements();
+  showHighscorePage();
+  // hsTableEl.classList.remove('hide');
+  // backBtn.classList.remove('hide');
+  getFromLocal();
+  //var players = JSON.parse(localStorage.getItem("user"));
+  console.log(players.username);
 
+  for (var i = 0; i < players.length; i++) {
+    var player = players[i];
+
+    //create list element
+    var li = document.createElement("li");
+    li.textContent = player.username;
+    li.setAttribute("class", "list-group-item");
+
+    //create child span element
+    var span = document.createElement("span");
+    span.textContent = player.userscore;
+    span.setAttribute("class", "float-end");
+
+
+    li.appendChild(span);
+    hsListEl.appendChild(li);
+    //DEBUG
+    console.log("List: " + li);
+    console.log("Span: " + span);
+    console.log("Full List: " + hsListEl);
+  }
 
 }
 
@@ -227,6 +293,7 @@ dBtn.addEventListener("click", compareQuestion);
 submitBtn.addEventListener("click", submitScores);
 highscoreBtn.addEventListener("click", viewHighscores);
 startBtn.addEventListener("click", startQuiz);
+backBtn.addEventListener("click", startQuiz);
 
 // PSEUDO CODE
 // I need to store a set of questions in an object or array
