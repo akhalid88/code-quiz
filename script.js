@@ -175,7 +175,7 @@ function startQuiz(event) {
   event.preventDefault();
   isPlaying = true;
   currentQuestion = 0;
-  timer = 50;
+  timer = 75;
   //setup quiz layout
   hideElements();
   showQuizPage();
@@ -203,7 +203,7 @@ function setTime() {
     //check for game end
     if(timer <= 0 || currentQuestion === quizArray.length) {
       clearInterval(timerInterval);
-      timer = 0;
+      // timer = 0;
       gameOver();
     } else {
       loadNextQuestion(currentQuestion)
@@ -255,12 +255,6 @@ function submitScores(event){
     userscore: score
   });
 
-  //DEBUG
-  // console.log("Temp: " + temp);
-  // console.log("PlayerArray: " + playerArray);
-  // console.log("Username: " + playerArray[0].username);
-  // console.log("Userscore: " + playerArray[0].userscore);
-  // console.log("===========");
   setToLocal(playerArray);
   loadHighscores();
 }
@@ -268,16 +262,11 @@ function submitScores(event){
 //Set player highscore to local storage
 function setToLocal(array) {
   localStorage.setItem("players", JSON.stringify(array));
-  //DEBUG
-  console.log("Reached Write to Local Storage POint");
 }
 
 //Get player highscore from local storage for loadHighscores()
 function getFromLocal() {
   players = JSON.parse(localStorage.getItem("players"));
-  //DEBUG
-  console.log("Reached get from Local storage poiint");
-  console.log("Players: " + players);
   return players;
 }
 
@@ -287,21 +276,6 @@ function viewHighscores(event){
   hideElements();
   showHighscorePage();
   
-  //DEBUG
-  console.log("HSList: " + hsListEl);
-  console.log("Has Child: " + hsListEl.hasChildNodes());
-  console.log("Child 1: " + hsListEl[0]);
-  console.log("===========");
-  // while(hsListEl.hasChildNodes()) {
-  //   var child = document.getElementById(".listitem-")
-
-
-  // }
-  // console.log("childnodes: " + hsListEl.hasChildNodes());
-  // if(hsListEl.hasChildNodes()) {
-  //   hsListEl.removeChild("li");
-  // }
-  // console.log("childnodes 2: " + hsListEl.hasChildNodes());
   if(isPlaying) {
     timer = 0;
     isPlaying = false;
@@ -312,6 +286,7 @@ function viewHighscores(event){
 function loadHighscores() {
   hideElements();
   showHighscorePage();
+  hsListEl.innerHTML = "";
   getFromLocal();
 
   for (var i = 0; i < players.length; i++) {
@@ -329,16 +304,18 @@ function loadHighscores() {
 
     li.appendChild(span);
     hsListEl.appendChild(li);
-    //DEBUG
-    console.log("List: " + li);
-    console.log("Span: " + span);
-    console.log("Full List: " + hsListEl);
+    
   }
 }
 
-function clearHighscores() {
-  localStorage.clear();
-}
+// function clearHighscores() {
+//   localStorage.clear();
+//   loadHighscores();
+//   console.log(hsListEl);
+//   hsListEl.innerHTML = "";
+  
+// }
+
 //Event Listeners for all interactable elements
 aBtn.addEventListener("click", compareQuestion);
 bBtn.addEventListener("click", compareQuestion);
@@ -348,7 +325,38 @@ submitBtn.addEventListener("click", submitScores);
 highscoreBtn.addEventListener("click", viewHighscores);
 startBtn.addEventListener("click", startQuiz);
 backBtn.addEventListener("click", showStartPage);
-clearBtn.addEventListener("click", clearHighscores);
+//clearBtn.addEventListener("click", clearHighscores);
+
+  //DEBUG
+  // console.log("Temp: " + temp);
+  // console.log("PlayerArray: " + playerArray);
+  // console.log("Username: " + playerArray[0].username);
+  // console.log("Userscore: " + playerArray[0].userscore);
+  // console.log("===========");
+
+
+    //DEBUG
+  // console.log("HSList: " + hsListEl);
+  // console.log("Has Child: " + hsListEl.hasChildNodes());
+  // console.log("Child 1: " + hsListEl[0]);
+  // console.log("===========");
+  // while(hsListEl.hasChildNodes()) {
+  //   var child = document.getElementById(".listitem-")
+
+
+  // }
+  // console.log("childnodes: " + hsListEl.hasChildNodes());
+  // if(hsListEl.hasChildNodes()) {
+  //   hsListEl.removeChild("li");
+  // }
+  // console.log("childnodes 2: " + hsListEl.hasChildNodes());
+
+
+  //DEBUG
+    // console.log("List: " + li);
+    // console.log("Span: " + span);
+    // console.log("Full List: " + hsListEl);
+
 
 // PSEUDO CODE
 // I need to store a set of questions in an object or array
