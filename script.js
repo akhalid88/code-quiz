@@ -31,7 +31,6 @@ var inputEl = document.querySelector("#input");
 var hsTableEl = document.querySelector("#hsTable");
 var hsListEl = document.querySelector("#hsList");
 
-
 //Array of quiz questions and answers
 var quizArray = [
   { question: "Question 1: What is Mario's last name?",
